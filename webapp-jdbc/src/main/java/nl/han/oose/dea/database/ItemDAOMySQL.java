@@ -2,14 +2,20 @@ package nl.han.oose.dea.database;
 
 import nl.han.oose.dea.webservices.Item;
 
-import java.sql.*;
+import javax.enterprise.inject.Default;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDAOMySQL {
+@Default
+public class ItemDAOMySQL implements IItemDAO {
 
     private DBConnectionFactory dbConnectionFactory = new DBConnectionFactory();
 
+    @Override
     public List<Item> getItems() {
         List<Item> resultList = new ArrayList<>();
         String sqlQuery = "SELECT * FROM STOCK_ITEMS";
@@ -27,6 +33,7 @@ public class ItemDAOMySQL {
         return resultList;
     }
 
+    @Override
     public void addItem(Item item) {
         String sqlQuery = "INSERT INTO STOCK_ITEMS VALUES (?,?)";
         try (
@@ -41,6 +48,7 @@ public class ItemDAOMySQL {
         }
     }
 
+    @Override
     public Item findItemByName(String name) {
         String sqlQuery = "SELECT * FROM STOCK_ITEMS WHERE name=?";
         try (

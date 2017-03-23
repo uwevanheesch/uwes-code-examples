@@ -11,7 +11,7 @@ public class DBConnectionFactory {
     public static final String DB_USER = "root";
     public static final String DB_PASSWORD = "mypassword";
 
-    static{
+    static {
         try {
             Class.forName(MYSQL_JDBC_DRIVER_CLASS);
         } catch (ClassNotFoundException e) {

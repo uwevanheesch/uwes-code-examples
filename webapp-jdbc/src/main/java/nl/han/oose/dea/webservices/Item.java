@@ -1,8 +1,5 @@
 package nl.han.oose.dea.webservices;
 
-/**
- * Created by uwe on 16/03/17.
- */
 public class Item {
 
     private String name;
