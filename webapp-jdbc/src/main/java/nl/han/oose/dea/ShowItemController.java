@@ -1,9 +1,5 @@
 package nl.han.oose.dea;
 
-import nl.han.oose.dea.database.IItemDAO;
-import nl.han.oose.dea.webservices.Item;
-import org.apache.cxf.jaxrs.client.WebClient;
-
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,19 +7,36 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+
 
 @WebServlet("/showItems")
 public class ShowItemController extends HttpServlet {
 
+    @Inject
+    private RestServiceDelegate serviceDelegate;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request,response);
+    }
 
-        WebClient webClient = WebClient.create("http://localhost:8080/").path("/items").accept("application/json");
-        List<Item> itemList = (List<Item>) webClient.getCollection(Item.class);
-        request.setAttribute("allItems", itemList);
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if("ADD".equals(request.getParameter("method"))){
+            String itemName = request.getParameter("itemName");
+            String itemDescription = request.getParameter("itemDescription");
+
+            Item newItem = new Item(itemName,itemDescription);
+            serviceDelegate.postItem(newItem);
+        }
+
+        request.setAttribute("allItems", serviceDelegate.getAllItems());
+
         request.getRequestDispatcher("showItems.jsp").forward(request, response);
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request,response);
     }
 }

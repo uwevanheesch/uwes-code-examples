@@ -1,6 +1,7 @@
 package nl.han.oose.dea.webservices;
 
 
+import nl.han.oose.dea.Item;
 import nl.han.oose.dea.database.IItemDAO;
 
 import javax.inject.Inject;
@@ -11,13 +12,14 @@ import java.util.List;
 public class ItemService {
 
     @Inject
-    private IItemDAO itemDAO;
+    IItemDAO itemDAO;
 
     @GET
     @Produces("application/json")
     public List<Item> getItems() {
         return itemDAO.getItems();
     }
+
 
     @POST
     @Consumes("application/json")
@@ -26,12 +28,23 @@ public class ItemService {
     }
 
 
+    public String generateListOfItemNames(){
+        StringBuilder builder = new StringBuilder();
+        for(Item item: itemDAO.getItems()){
+            builder.append(item.getName()).append(",");
+        }
+        String result = builder.toString();
+        return result.substring(0, result.length() - 1);
+    }
+
     @GET
     @Path("/{name}")
     @Produces("application/json")
     public Item getItem(@PathParam("name") String itemName) {
         return itemDAO.findItemByName(itemName);
     }
+
+
 
 
 }

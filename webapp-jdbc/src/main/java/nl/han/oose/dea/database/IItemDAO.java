@@ -1,6 +1,6 @@
 package nl.han.oose.dea.database;
 
-import nl.han.oose.dea.webservices.Item;
+import nl.han.oose.dea.Item;
 
 import java.util.List;
 

@@ -1,28 +1,48 @@
 package nl.han.oose.dea.database;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
-public class DBConnectionFactory {
+public class DBConnectionFactory implements IDBConnectionFactory {
 
-    public static final String MYSQL_JDBC_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
-    public static final String ITEM_DB_CONNECTION_STRING = "jdbc:mysql://127.0.0.1:3306/itemdb";
-    public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "mypassword";
+    private static Properties properties;
 
     static {
+        properties = new Properties();
+        ClassLoader classLoader = DBConnectionFactory.class.getClassLoader();
+
         try {
-            Class.forName(MYSQL_JDBC_DRIVER_CLASS);
+            FileInputStream fileInputStream = new FileInputStream(classLoader.getResource("database.properties").getFile());
+            properties.load(fileInputStream);
+            System.out.println(properties.getProperty("MYSQL_JDBC_DRIVER_CLASS"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Class.forName(properties.getProperty("MYSQL_JDBC_DRIVER_CLASS"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+
     }
 
+    @Override
     public Connection getConnection() {
         Connection con = null;
         try {
-            con = DriverManager.getConnection(ITEM_DB_CONNECTION_STRING, DB_USER, DB_PASSWORD);
+            con = DriverManager.getConnection(
+                    properties.getProperty("ITEM_DB_CONNECTION_STRING"),
+                    properties.getProperty("DB_USER"),
+                    properties.getProperty("DB_PASSWORD"));
         } catch (SQLException e) {
             e.printStackTrace();
         }

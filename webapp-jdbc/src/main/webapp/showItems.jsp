@@ -34,8 +34,21 @@
 </ul>
 
 
+<form action="/showItems" method="post" >
+    <input type="hidden" name="method" value="ADD" />
+
+    Name: <input type="text" name="itemName"/> <br/>
+    Description: <input type="text" name="itemDescription"/><br/>
+    <input type="submit"/>
+</form>
+
+<br/>
+<br/>
+
 <c:forEach items="${requestScope.allItems}" var="item">
     Item: ${item.name} <br/>
 </c:forEach>
+
+
 </body>
 </html>
